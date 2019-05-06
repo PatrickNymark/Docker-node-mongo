@@ -10,6 +10,10 @@ const Item = require('./models/Item');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Set view engine
+app.set('view engine', 'ejs');
+
+
 // Connect to MongoDB
 mongoose
     .connect(
@@ -23,7 +27,7 @@ mongoose
 app.get('/', (req, res) => {
     Item.find()
         .then(items => res.render('index', { items }))
-        .catch(err => res.status(404).json({ msg: 'No items found' }));
+        .catch(err => res.status(404).json(err));
 });
 
 app.post('/item/add', (req, res) => {
@@ -33,6 +37,7 @@ app.post('/item/add', (req, res) => {
 
     newItem.save().then(item => res.redirect('/'));
 });
+
 
 const port = 5000 || process.env.PORT;
 
